@@ -1,6 +1,17 @@
-import java.time.LocalDate;
-import java.util.HashMap;
+package br.ufes.Gabriel.eleicao.service;
+
 import java.util.LinkedList;
+import java.util.List;
+
+import br.ufes.Gabriel.eleicao.model.Candidato;
+import br.ufes.Gabriel.eleicao.model.Partido;
+import br.ufes.Gabriel.eleicao.util.Leitor;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +54,6 @@ public class Eleicao {
 
      public LinkedList<Partido> getPartidos() {
         return new LinkedList<Partido>(partidos);
-
     }
 
     public void adicionaPartidos(Partido grupo) {

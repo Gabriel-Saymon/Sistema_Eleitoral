@@ -1,3 +1,8 @@
+package br.ufes.Gabriel.eleicao;
+
+import br.ufes.Gabriel.eleicao.service.Eleicao;
+import br.ufes.Gabriel.eleicao.service.Relatorio;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -25,8 +30,14 @@ public class App {
         System.out.println("Arquivo de votacaoo: " + caminhoArquivoVotos);
         System.out.println("Data da eleicao: " + dataEleicao.format(formatter));
 
-        Eleicao processoEleitoral = new Eleicao(dataEleicao, codigoMunicipio);
-
+        try {
+            //Eleicao eleicao = new Eleicao(codMuni, data);
+            //eleicao.process(arqCand, arqVoto);
+            //Relatorio.gerarRelatorios(eleicao);
+        } catch (Exception e) {
+            System.err.println("Erro: " + e.getMessage());
+            System.exit(1);
+        }
 
     }
 }

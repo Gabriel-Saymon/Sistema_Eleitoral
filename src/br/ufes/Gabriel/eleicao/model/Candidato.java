@@ -1,3 +1,5 @@
+package br.ufes.Gabriel.eleicao.model;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -5,13 +7,18 @@ public class Candidato {
     private String sgUe;              // Codigo do municipio
     private int cdCargo;              // 13 = vereador
     private int nrCandidato;          // Numero do candidato
+    private String nmCandidato;       // Nome do Candidato 
     private String nmUrnaCandidato;   // Nome na urna
     private int nrPartido;            // Numero do partido
     private String sgPartido;         // Sigla do partido
+    private Partido relacaoPartidaria;// Partido
     private int nrFederacao;          // Numero da federação (-1 = isolado)
     private LocalDate dtNascimento;   // Data de nascimento
     private int cdGenero;             // 2 = masculino, 4 = feminino
     private int cdSitTotTurno;        // 2 ou 3 = eleito; -1 = invalido
+
+    private int qtdVotos;             // Votos nominais
+    private int destinoVotos;         // 
 
     // Formata datas no padrao dia/mes/ano (ex: 06/10/2024)
     //private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");

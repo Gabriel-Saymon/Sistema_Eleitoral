@@ -4,18 +4,18 @@
 
 ```
 .
-├── bin/                     
-│   └── vereadores.jar       ← artefato compilado (output do build)
-├── src/                     
-│   ├── App.java
-│   ├── Candidato.java
-│   ├── Eleicao.java
-│   ├── Impressora.java  
-│   ├── Leitor.java                  
-│   ├── Partido.java             
-│   └── Relatorio.java   
-├── build.xml                ← script Ant para compile/jar
-└── README.md                ← instruções de uso e compile
+src/
+└─ br/ufes/Gabriel/eleicao/
+   ├─ model/
+   │   ├ Candidato.java
+   │   ├ Partido.java
+   │   └ VotoSecao.java
+   ├─ util/
+   │   └ Leitor.java
+   ├─ service/
+   │   ├ Eleicao.java
+   │   └ Relatorio.java
+   └─ App.java
 ```
 
 ## Como compilar e executar
@@ -38,9 +38,10 @@
    ```
 4. De maneira mais simples e casual:
    ```bash
-   javac -d bin src/App.java src/*.java
+   javac -d bin $(find src -name "*.java")
    ```
    Exemplo:
    ```bash
-   java -cp bin App 57053 consulta_cand_2024_AC.csv votacao_secao_2024_AC.csv 06/10/2024
+   java -cp bin br.ufes.Gabriel.eleicao.App 57053 consulta_cand_2024_ES.csv votacao_secao_2024_ES.csv 06/10/2024
+
    ```
