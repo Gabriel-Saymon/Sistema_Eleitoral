@@ -34,13 +34,13 @@
    ```
    Exemplo:
    ```bash
-   java -jar bin/vereadores.jar 57053 consulta_cand_2024_ES.csv votacao_secao_2024_ES.csv 06/10/2024
+   java -jar bin/vereadores.jar 57053 consulta_cand_2024_AC.csv votacao_secao_2024_AC.csv 06/10/2024
    ```
 4. De maneira mais simples e casual:
    ```bash
-   javac -d bin src/App.java
+   javac -d bin src/App.java src/*.java
    ```
    Exemplo:
    ```bash
-   java -cp bin App 57053 consulta_cand_2024_ES.csv votacao_secao_2024_ES.csv 06/10/2024
+   java -cp bin App 57053 consulta_cand_2024_AC.csv votacao_secao_2024_AC.csv 06/10/2024
    ```

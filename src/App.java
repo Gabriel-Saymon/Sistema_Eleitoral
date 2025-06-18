@@ -17,11 +17,16 @@ public class App {
         // parse da data no formato dd/MM/yyyy
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataEleicao = LocalDate.parse(args[3], formatter);
+        dataEleicao.format(formatter);
 
         // impressao para conferencia
         System.out.println("Codigo do municipio: " + codigoMunicipio);
         System.out.println("Arquivo de candidatos: " + caminhoArquivoCandidatos);
         System.out.println("Arquivo de votacaoo: " + caminhoArquivoVotos);
         System.out.println("Data da eleicao: " + dataEleicao.format(formatter));
+
+        Eleicao processoEleitoral = new Eleicao(dataEleicao, codigoMunicipio);
+
+
     }
 }
