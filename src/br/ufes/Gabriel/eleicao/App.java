@@ -2,6 +2,7 @@ package br.ufes.Gabriel.eleicao;
 
 import br.ufes.Gabriel.eleicao.service.Eleicao;
 import br.ufes.Gabriel.eleicao.service.Relatorio;
+import br.ufes.Gabriel.eleicao.util.Leitor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,9 +32,12 @@ public class App {
         System.out.println("Data da eleicao: " + dataEleicao.format(formatter));
 
         try {
-            //Eleicao eleicao = new Eleicao(codMuni, data);
-            //eleicao.process(arqCand, arqVoto);
-            //Relatorio.gerarRelatorios(eleicao);
+            Eleicao eleicao = new Eleicao(codigoMunicipio, dataEleicao);
+            Leitor leitor = new Leitor(caminhoArquivoCandidatos);
+            leitor.leituraCandidatos(eleicao);
+            leitor.leituraVotos(eleicao, caminhoArquivoVotos);
+            //eleicao.printConferenciaCandidatos();
+            //eleicao.printConferenciaVotos();
         } catch (Exception e) {
             System.err.println("Erro: " + e.getMessage());
             System.exit(1);

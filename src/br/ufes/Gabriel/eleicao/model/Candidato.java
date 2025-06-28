@@ -103,4 +103,12 @@ public class Candidato {
         return cdSitTotTurno == 2 || cdSitTotTurno == 3;
     }
 
+    public int getQtdVotos() {
+        return this.qtdVotos;
+    }
+
+    public void addVotos(int qtd) {
+        this.qtdVotos += qtd;
+    }
+
 }
