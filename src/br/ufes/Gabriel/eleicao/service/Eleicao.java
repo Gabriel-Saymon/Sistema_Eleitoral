@@ -119,4 +119,8 @@ public class Eleicao {
     public List<Partido> getPartidos() {
         return Collections.unmodifiableList(partidosList);
     }
+
+    public int getNumeroCandidatosEleitos() {
+        return (int) candidatos.values().stream().filter(Candidato::isEleito).count();
+    }
 }

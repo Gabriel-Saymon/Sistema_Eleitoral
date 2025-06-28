@@ -50,6 +50,7 @@ public class Leitor {
                 if (!sgUe.equals(eleicao.getCodMunicipio()) || cdCargo != 13 || cdSit == -1) continue;
 
                 int nrCandidato = Integer.parseInt(cols[16]);
+                String nmCandidato = cols[17];
                 String nmUrna = cols[18];
                 int nrPartido = Integer.parseInt(cols[25]);
                 String sgPartido = cols[26];
@@ -57,11 +58,7 @@ public class Leitor {
                 LocalDate dtNasc = LocalDate.parse(cols[36], formatter);
                 int cdGenero = Integer.parseInt(cols[38]);
 
-                Candidato cand = new Candidato(
-                    sgUe, cdCargo, nrCandidato, nmUrna,
-                    nrPartido, sgPartido, nrFederacao,
-                    dtNasc, cdGenero, cdSit
-                );
+                Candidato cand = new Candidato(sgUe, cdCargo, nrCandidato, nmCandidato, nmUrna, nrPartido, sgPartido, nrFederacao, dtNasc, cdGenero, cdSit);
 
                 eleicao.adicionaCandidato(cand);
 

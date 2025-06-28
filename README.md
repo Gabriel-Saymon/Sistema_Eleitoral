@@ -34,7 +34,7 @@ src/
    ```
    Exemplo:
    ```bash
-   java -jar bin/vereadores.jar 57053 consulta_cand_2024_AC.csv votacao_secao_2024_AC.csv 06/10/2024
+   java -jar bin/vereadores.jar 57053 consulta_cand_2024_ES.csv votacao_secao_2024_ES.csv 06/10/2024
    ```
 4. De maneira mais simples e casual:
    ```bash
@@ -42,6 +42,6 @@ src/
    ```
    Exemplo:
    ```bash
-   java -cp bin br.ufes.Gabriel.eleicao.App 01554 consulta_cand_2024_AC.csv votacao_secao_2024_AC.csv 06/10/2024
+   java -cp bin br.ufes.Gabriel.eleicao.App 57053 consulta_cand_2024_ES.csv votacao_secao_2024_ES.csv 06/10/2024
 
    ```

@@ -38,4 +38,17 @@ public class Partido {
     public void addVotosLegenda(int qtd) {
         votosLegenda += qtd;
     }
+
+    public int getVotosNominais() {
+        // Garante que cada Candidato tem o metodo getQtdVotos()
+        return candidatos.stream().mapToInt(Candidato::getQtdVotos).sum();
+    }
+
+    public int getTotalVotos() {
+        return getVotosNominais() + votosLegenda;
+    }
+
+    public void ordenaCandidatos(){
+        candidatos.sort(null);
+    }
 }

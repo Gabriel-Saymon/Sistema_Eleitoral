@@ -38,6 +38,8 @@ public class App {
             leitor.leituraVotos(eleicao, caminhoArquivoVotos);
             //eleicao.printConferenciaCandidatos();
             //eleicao.printConferenciaVotos();
+            Relatorio rel = new Relatorio(eleicao);
+            rel.gerarRelatorios();
         } catch (Exception e) {
             System.err.println("Erro: " + e.getMessage());
             System.exit(1);
