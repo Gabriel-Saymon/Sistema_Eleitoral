@@ -18,7 +18,7 @@ public class Relatorio {
         this.candidatosOrdenados.sort(Comparator.comparingInt(Candidato::getQtdVotos).reversed());
         // faz o mesmo com partidos ordenados por total de votos
         this.partidosOrdenados = new ArrayList<>(deputados.getPartidos());
-        this.partidosOrdenados.sort(Comparator.comparingInt(Partido::getTotalVotos).reversed());
+        this.partidosOrdenados.sort(Comparator.comparingInt(Partido::getTotalVotos).reversed().thenComparingInt(Partido::getNumero));
     }
 
     public void gerarRelatorios() {
@@ -51,6 +51,8 @@ public class Relatorio {
         List<Candidato> topN = new ArrayList<>();
         List<Candidato> prejudicados = new ArrayList<>();
         List<Candidato> beneficiados = new ArrayList<>();
+
+        List<Candidato> ranking = new ArrayList<>(candidatosOrdenados);
 
         int contador = 1;
         for (Candidato c : candidatosOrdenados) {
@@ -103,44 +105,72 @@ public class Relatorio {
             System.out.println(c.getNmUrnaCandidato() + " (" + c.getSgPartido() + ", " + nf.format(c.getQtdVotos()) + " votos)");
 
         }
-        //System.out.println();
 
         // 5. Eleitos que se beneficiaram do proporcional
-        System.out.println("\nEleitos, que se beneficiaram do sistema proporcional:\n(com sua posição no ranking de mais votados)");
+        System.out.println("\nEleitos que se beneficiaram do sistema proporcional:");
         for (Candidato c : beneficiados) {
-            System.out.print((topN.indexOf(c) + 1) + " - ");
-            if (c.getNrFederacao() != -1) System.out.print("*");
-            System.out.println(c.getNmUrnaCandidato() + " (" + c.getSgPartido() + ", " + nf.format(c.getQtdVotos()) + " votos)");
-
+            int pos = ranking.indexOf(c) + 1;     // posição no ranking completo
+            String prefix = c.getNrFederacao() != -1 ? "*" : "";
+            System.out.printf(
+                "%2d - %s%s (%s votos)%n",
+                pos,
+                prefix,
+                c.getNmUrnaCandidato(),
+                nf.format(c.getQtdVotos())
+            );
         }
         System.out.println();
     }
 
-    public void printVotacaoPorPartido() {
+    /**
+    * Imprime a votação dos partidos e quantos candidatos cada um teve eleitos.
+    */
+    private void printVotacaoPorPartido() {
         NumberFormat nf = NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"));
         nf.setGroupingUsed(true);
 
-        System.out.println("Votação por partido e número de candidatos eleitos:");
+        System.out.println("Votação dos partidos e número de candidatos eleitos:");
         int contador = 1;
-        for (Partido p : partidosOrdenados) {
-            // votos nominais e de legenda
-            int votosNominais = p.getVotosNominais();
-            int votosLegenda = p.getVotosLegenda();
-            int totalVotos = votosNominais + votosLegenda;
-            // conta quantos eleitos em cada partido
-            long eleitos = p.getCandidatos().stream().filter(Candidato::isEleito).count();
 
-            System.out.printf( "%2d - %s - %d, %s votos (%s nominais e %s de legenda), %d %s eleito%s%n",
-                contador++,
-                p.getSigla(),
-                p.getNumero(),
-                nf.format(totalVotos),
-                nf.format(votosNominais),
-                nf.format(votosLegenda),
-                eleitos,
-                eleitos > 1 ? "candidatos" : "candidato",
-                eleitos > 1 ? "" : "" 
+        for (Partido p : partidosOrdenados) {
+            int nominais = p.getVotosNominais();
+            int legenda  = p.getVotosLegenda();
+            int total    = nominais + legenda;
+
+            int eleitos = 0;
+            for (Candidato c : p.getCandidatos()) {
+                if (c.isEleito()) {
+                    eleitos++;
+                }
+            }
+
+            String totalLabel;
+            if (total == 1) {
+                totalLabel = nf.format(total) + " voto";
+            } else {
+                totalLabel = nf.format(total) + " votos";
+            }
+
+            String nomLabel;
+            if (nominais == 1) {
+                nomLabel = nf.format(nominais) + " nominal";
+            } else {
+                nomLabel = nf.format(nominais) + " nominais";
+            }
+
+            String legLabel = nf.format(legenda) + " de legenda";
+
+            String eleitosLabel;
+            if (eleitos == 1) {
+                eleitosLabel = eleitos + " candidato eleito";
+            } else {
+                eleitosLabel = eleitos + " candidatos eleitos";
+            }
+
+            System.out.printf(
+                "%2d - %s - %d, %s (%s e %s), %s%n",contador,p.getSigla(),p.getNumero(),totalLabel,nomLabel,legLabel,eleitosLabel
             );
+            contador++;
         }
     }
 

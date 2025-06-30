@@ -1,0 +1,83 @@
+@startuml Sistema_Eleitoral
+
+title Diagrama de Classes - Sistema de Apuração Eleitoral de Vereadores
+
+package "br.ufes.Gabriel.eleicao" {
+  class App {
+    + main(args: String[]): void
+  }
+}
+
+package "br.ufes.Gabriel.eleicao.util" {
+  class Leitor {
+    - brCandidatos: BufferedReader
+    - brVotos: BufferedReader
+    + Leitor(caminhoCandidatos: String, caminhoVotos: String)
+    + leituraCandidatos(eleicao: Eleicao): void
+    + leituraVotos(eleicao: Eleicao): void
+  }
+}
+
+package "br.ufes.Gabriel.eleicao.model" {
+  class Candidato {
+    - nmUrnaCandidato: String
+    - nmCandidato: String
+    - cargo: int
+    - nrCandidato: int
+    - nrPartido: int
+    - sgPartido: String
+    - nrFederacao: int
+    - dtNascimento: LocalDate
+    - cdGenero: int
+    - cdSitTotTurno: int
+    - qtdVotos: int
+    + isEleito(): boolean
+    + addVotos(qt: int): void
+    + getQtdVotos(): int
+  }
+
+  class Partido {
+    - nrPartido: int
+    - sgPartido: String
+    - votosLegenda: int
+    - candidatos: List<Candidato>
+    + addCandidato(c: Candidato): void
+    + addVotosLegenda(qt: int): void
+    + getVotosNominais(): int
+    + getTotalVotos(): int
+  }
+}
+
+package "br.ufes.Gabriel.eleicao.service" {
+  class Eleicao {
+    - codMunicipio: String
+    - dataEleicao: LocalDate
+    - qtdVagas: int
+    - candidatos: Map<Integer, Candidato>
+    - partidos: List<Partido>
+    + getNumeroCandidatosEleitos(): int
+    + getPartidoPorNumero(nr: int): Partido
+    + getCandidatos(): Map<Integer, Candidato>
+    + getPartidos(): List<Partido>
+  }
+
+  class Relatorio {
+    - deputados: Eleicao
+    - candidatosOrdenados: List<Candidato>
+    - partidosOrdenados: List<Partido>
+    + Relatorio(deputados: Eleicao)
+    + gerarRelatorios(): void
+  }
+}
+
+App --> Leitor
+App --> Eleicao
+App --> Relatorio
+Eleicao "1" *-- "0..*" Candidato : contains >
+Eleicao "1" *-- "0..*" Partido   : contains >
+Leitor --> Eleicao
+Relatorio --> Eleicao
+Relatorio --> Candidato
+Relatorio --> Partido
+Candidato --> Partido : participanteDe >
+@enduml

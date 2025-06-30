@@ -42,6 +42,15 @@ public class Leitor {
                 String[] cols = linha.split(";");
                 for (int i = 0; i < cols.length; i++) cols[i] = cols[i].replace("\"", "");
 
+                int nrPartido = Integer.parseInt(cols[25]);
+                String sgPartido = cols[26];
+
+                Partido partido = eleicao.getPartidoPorNumero(nrPartido);
+                if (partido == null) {
+                    partido = new Partido(nrPartido, sgPartido);
+                    eleicao.adicionaPartido(partido);
+                }
+
                 String sgUe = cols[11];
                 int cdCargo = Integer.parseInt(cols[13]);
                 int cdSit = Integer.parseInt(cols[48]);
@@ -50,8 +59,8 @@ public class Leitor {
                 int nrCandidato = Integer.parseInt(cols[16]);
                 String nmCandidato = cols[17];
                 String nmUrna = cols[18];
-                int nrPartido = Integer.parseInt(cols[25]);
-                String sgPartido = cols[26];
+                //int nrPartido = Integer.parseInt(cols[25]);
+                //String sgPartido = cols[26];
                 int nrFederacao = Integer.parseInt(cols[28]);
                 LocalDate dtNasc = LocalDate.parse(cols[36], formatter);
                 int cdGenero = Integer.parseInt(cols[38]);
@@ -59,12 +68,6 @@ public class Leitor {
                 Candidato cand = new Candidato(sgUe, cdCargo, nrCandidato, nmCandidato, nmUrna, nrPartido, sgPartido, nrFederacao, dtNasc, cdGenero, cdSit);
 
                 eleicao.adicionaCandidato(cand);
-
-                Partido partido = eleicao.getPartidoPorNumero(nrPartido);
-                if (partido == null) {
-                    partido = new Partido(nrPartido, sgPartido);
-                    eleicao.adicionaPartido(partido);
-                }
                 partido.addCandidato(cand);
             }
         } catch (IOException e) {
