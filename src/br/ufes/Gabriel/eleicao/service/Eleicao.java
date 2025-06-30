@@ -6,10 +6,6 @@ import br.ufes.Gabriel.eleicao.model.Partido;
 import java.time.LocalDate;
 import java.util.*;
 
-/**
- * Classe que representa a eleição: armazena candidatos, partidos
- * e metadados como código do município e data da eleição.
- */
 public class Eleicao {
     private final String codMunicipio;
     private final LocalDate dataEleicao;
@@ -19,10 +15,7 @@ public class Eleicao {
     private final List<Partido> partidosList;
 
     /**
-     * Constrói a eleição para um município e data dados.
-     *
-     * @param codMunicipio  código de município (SG_UE)
-     * @param dataEleicao   data da eleição como LocalDate
+     * Constroi a eleicao para um municipio e data dados.
      */
     public Eleicao(String codMunicipio, LocalDate dataEleicao) {
         this.codMunicipio = codMunicipio;
@@ -34,10 +27,8 @@ public class Eleicao {
     }
 
     /**
-     * Registra um candidato na eleição.
+     * Registra um candidato na eleicao.
      * Incrementa o total de vagas caso o candidato seja eleito.
-     *
-     * @param cand candidato a ser adicionado
      */
     public void adicionaCandidato(Candidato cand) {
         candidatos.put(cand.getNrCandidato(), cand);
@@ -47,9 +38,7 @@ public class Eleicao {
     }
 
     /**
-     * Adiciona um partido à lista de partidos.
-     *
-     * @param partido partido a ser registrado
+     * Adiciona um partido a lista de partidos.
      */
     public void adicionaPartido(Partido partido) {
         partidosMap.put(partido.getNumero(), partido);
@@ -57,17 +46,14 @@ public class Eleicao {
     }
 
     /**
-     * Recupera um partido pelo seu número.
-     *
-     * @param numero número do partido
-     * @return Partido ou null se não existir
+     * Recupera um partido pelo seu numero.
      */
     public Partido getPartidoPorNumero(int numero) {
         return partidosMap.get(numero);
     }
 
     /**
-     * Imprime para conferência a posição e o nome de urna de cada candidato.
+     * Imprime para conferencia a posicao e o nome de urna de cada candidato.
      */
     public void printConferenciaCandidatos() {
         System.out.println("Conferência de candidatos carregados:");
@@ -78,7 +64,7 @@ public class Eleicao {
     }
 
     /**
-     * Imprime para conferência o total de votos nominais por candidato e
+     * Imprime para conferencia o total de votos nominais por candidato e
      * votos de legenda por partido.
      */
     public void printConferenciaVotos() {
@@ -97,8 +83,6 @@ public class Eleicao {
             );
         }
     }
-
-    // --- getters para uso nos relatórios ---
 
     public String getCodMunicipio() {
         return codMunicipio;

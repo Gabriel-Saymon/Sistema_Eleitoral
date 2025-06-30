@@ -20,70 +20,53 @@ public class Candidato {
     // Formata datas no padrao dia/mes/ano (ex: 06/10/2024)
     //private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public Candidato(String sgUe,
-                     int cdCargo,
-                     int nrCandidato,
-                     String nmCandidato,       
-                     String nmUrnaCandidato,
-                     int nrPartido,
-                     String sgPartido,
-                     int nrFederacao,
+    public Candidato(String sgUe, int cdCargo, int nrCandidato, String nmCandidato, String nmUrnaCandidato, int nrPartido, String sgPartido, int nrFederacao,
                      LocalDate dtNascimento,
                      int cdGenero,
                      int cdSitTotTurno) {
-        this.sgUe            = sgUe;
-        this.cdCargo         = cdCargo;
-        this.nrCandidato     = nrCandidato;
-        this.nmCandidato     = nmCandidato;       
+        this.sgUe = sgUe;
+        this.cdCargo = cdCargo;
+        this.nrCandidato = nrCandidato;
+        this.nmCandidato = nmCandidato;       
         this.nmUrnaCandidato = nmUrnaCandidato;
-        this.nrPartido       = nrPartido;
-        this.sgPartido       = sgPartido;
-        this.nrFederacao     = nrFederacao;
-        this.dtNascimento    = dtNascimento;
-        this.cdGenero        = cdGenero;
-        this.cdSitTotTurno   = cdSitTotTurno;
+        this.nrPartido = nrPartido;
+        this.sgPartido = sgPartido;
+        this.nrFederacao = nrFederacao;
+        this.dtNascimento = dtNascimento;
+        this.cdGenero = cdGenero;
+        this.cdSitTotTurno = cdSitTotTurno;
     }
-
-    
-    // Getters
+   
     public String getNmCandidato() {
         return this.nmCandidato;
     }
     public String getSgUe() { 
         return sgUe; 
     }
-
     public int getCdCargo() { 
         return cdCargo; 
     }
-
     public int getNrCandidato() { 
         return nrCandidato; 
     }
-
     public String getNmUrnaCandidato() { 
         return nmUrnaCandidato; 
     }
     public int getNrPartido() { 
         return nrPartido; 
     }
-
     public String getSgPartido() { 
         return sgPartido; 
     }
-
     public int getNrFederacao() { 
         return nrFederacao; 
     }
-
     public LocalDate getDtNascimento() { 
         return dtNascimento; 
     }
-
     public int getCdGenero() { 
         return cdGenero; 
     }
-
     public int getCdSitTotTurno() { 
         return cdSitTotTurno; 
     }

@@ -19,8 +19,6 @@ public class Leitor {
 
     /**
      * Inicializa o leitor para o arquivo de candidatos.
-     *
-     * @param caminhoArquivoCandidatos CSV de candidatos (ISO-8859-1, ";" como separador)
      */
     public Leitor(String caminhoArquivoCandidatos) {
         try {
@@ -34,12 +32,12 @@ public class Leitor {
     }
 
     /**
-     * Lê e processa o CSV de candidatos, filtrando por município, cargo=13 e situação válida,
+     * Le e processa o CSV de candidatos, filtrando por municipio, cargo=13 e situacao valida,
      * registrando em Eleicao e agrupando no respectivo Partido.
      */
     public void leituraCandidatos(Eleicao eleicao) {
         try {
-            String linha = brCandidatos.readLine(); // cabeçalho
+            String linha = brCandidatos.readLine();
             while ((linha = brCandidatos.readLine()) != null) {
                 String[] cols = linha.split(";");
                 for (int i = 0; i < cols.length; i++) cols[i] = cols[i].replace("\"", "");
@@ -75,27 +73,12 @@ public class Leitor {
         }
     }
 
-    /**
-     * Lê e processa o CSV de votos, filtrando por município e cargo=13,
-     * ignorando votos 95–98, e distribuindo votos nominais aos candidatos
-     * e votos de legenda ao partido correspondente.
-     *
-     * @param eleicao             instância que receberá os votos
-     * @param caminhoArquivoVotos caminho do CSV de votação (ISO-8859-1, ";" como separador)
-     */
     public void leituraVotos(Eleicao eleicao, String caminhoArquivoVotos) {
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(
-                new FileInputStream(caminhoArquivoVotos),
-                StandardCharsets.ISO_8859_1
-                ))) {
-
-            // pula cabeçalho
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(caminhoArquivoVotos),StandardCharsets.ISO_8859_1))) {
             String linha = br.readLine();
 
             while ((linha = br.readLine()) != null) {
                 String[] cols = linha.split(";");
-                // remove aspas
                 for (int i = 0; i < cols.length; i++) {
                     cols[i] = cols[i].replace("\"", "");
                 }
@@ -115,7 +98,7 @@ public class Leitor {
                     continue;
                 }
 
-                // nominal = 5 dígitos
+                // nominal = 5 digitos
                 if (String.valueOf(nrVotavel).length() == 5) {
                     Candidato cand = eleicao.getCandidatos().get(nrVotavel);
                     if (cand != null) {

@@ -25,19 +25,11 @@ public class App {
         LocalDate dataEleicao = LocalDate.parse(args[3], formatter);
         dataEleicao.format(formatter);
 
-        // impressao para conferencia
-        System.out.println("Codigo do municipio: " + codigoMunicipio);
-        System.out.println("Arquivo de candidatos: " + caminhoArquivoCandidatos);
-        System.out.println("Arquivo de votacaoo: " + caminhoArquivoVotos);
-        System.out.println("Data da eleicao: " + dataEleicao.format(formatter));
-
         try {
             Eleicao eleicao = new Eleicao(codigoMunicipio, dataEleicao);
             Leitor leitor = new Leitor(caminhoArquivoCandidatos);
             leitor.leituraCandidatos(eleicao);
             leitor.leituraVotos(eleicao, caminhoArquivoVotos);
-            //eleicao.printConferenciaCandidatos();
-            //eleicao.printConferenciaVotos();
             Relatorio rel = new Relatorio(eleicao);
             rel.gerarRelatorios();
         } catch (Exception e) {
