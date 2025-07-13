@@ -1,25 +1,24 @@
-<project name="TrabalhoPOO_2025_1" default="compile" basedir=".">
-    <description>Build.xml para o trabalho de POO 2025/1 (vereadores)</description>
+<project name="TrabalhoPOO" default="compile" basedir=".">
+	<description>Arquivo de build do trabalho 1 de POO.</description>
 
-    <!-- Propriedades do build -->
-    <property name="src" location="src"/>
-    <property name="bin" location="bin"/>
-    <property name="mainClass" value="br.ufes.Gabriel.eleicao.App"/>
+	<!-- Propriedades do build. -->
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="mainClass" value="br.ufes.gabriel.eleicao.App" />
 
-    <!-- Inicialização: cria pasta bin -->
-    <target name="init" description="Inicializa estruturas de build">
-        <mkdir dir="${bin}"/>
-    </target>
+	<!-- Inicialização. -->
+	<target name="init" description="Inicializa as estruturas necessárias.">
+		<tstamp/>
+		<mkdir dir="${bin}" />
+	</target>
 
-    <!-- Compilação: Java 17 -->
-    <target name="compile" depends="init" description="Compila código-fonte Java">
-        <javac srcdir="${src}" destdir="${bin}"
-               source="17" target="17" includeantruntime="false"
-               encoding="UTF-8"/>
-    </target>
+	<!-- Compilação. -->
+	<target name="compile" depends="init" description="Compila o código-fonte.">
+		<javac target="17" source="17" includeantruntime="false" srcdir="${src}" destdir="${bin}" />
+	</target>
 
-    <!-- Empacota em JAR executável -->
-    <target name="jar" depends="compile" description="Gera JAR executável">
+	<!-- Pacote. -->	
+	<target name="jar" depends="compile">
         <jar destfile="vereadores.jar" basedir="${bin}">
             <manifest>
                 <attribute name="Main-Class" value="${mainClass}"/>
@@ -27,23 +26,21 @@
         </jar>
     </target>
 
-    <!-- Execução com parâmetros de exemplo -->
-    <target name="run" depends="compile" description="Executa com parâmetros de exemplo">
-        <java fork="yes" classname="${mainClass}">
-            <!-- Exemplo: código mun, arquivo cand, arquivo votos, data eleição -->
-            <arg value="01554"/>
-            <arg value="consulta_cand_2024_AC.csv"/>
-            <arg value="votacao_secao_2024_AC.csv"/>
-            <arg value="06/10/2024"/>
-            <classpath>
-                <pathelement path="${bin}"/>
-            </classpath>
-        </java>
-    </target>
-
-    <!-- Limpeza: remove bin e JAR -->
-    <target name="clean" description="Limpa artefatos de build">
-        <delete dir="${bin}"/>
-        <delete file="vereadores.jar"/>
-    </target>
+	<!-- Execução normal. -->
+	<target name="run" depends="compile" description="Executa o programa principal, em modo normal.">
+		<java fork="yes" classname="${mainClass}">
+			<arg value="${cdMunicipio}"/>
+			<arg value="candidatos.csv" />
+			<arg value="votacao.csv" />
+			<arg value="06/10/2024" />
+			<classpath>
+				<pathelement path="${bin}" />
+			</classpath>
+		</java>
+	</target>
+	
+	<!-- Limpeza. -->
+	<target name="clean" description="Limpa o projeto, deixando apenas o código-fonte." >
+		<delete dir="${bin}"/>
+	</target>
 </project>

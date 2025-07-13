@@ -1,10 +1,10 @@
-package br.ufes.Gabriel.eleicao.service;
-
-import br.ufes.Gabriel.eleicao.model.Candidato;
-import br.ufes.Gabriel.eleicao.model.Partido;
+package br.ufes.gabriel.eleicao.service;
 
 import java.time.LocalDate;
 import java.util.*;
+
+import br.ufes.gabriel.eleicao.model.Candidato;
+import br.ufes.gabriel.eleicao.model.Partido;
 
 public class Eleicao {
     private final String codMunicipio;

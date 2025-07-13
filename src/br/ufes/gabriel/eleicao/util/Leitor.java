@@ -1,8 +1,8 @@
-package br.ufes.Gabriel.eleicao.util;
+package br.ufes.gabriel.eleicao.util;
 
-import br.ufes.Gabriel.eleicao.service.Eleicao;
-import br.ufes.Gabriel.eleicao.model.Candidato;
-import br.ufes.Gabriel.eleicao.model.Partido;
+import br.ufes.gabriel.eleicao.service.Eleicao;
+import br.ufes.gabriel.eleicao.model.Candidato;
+import br.ufes.gabriel.eleicao.model.Partido;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -52,9 +52,15 @@ public class Leitor {
                 }
 
                 String sgUe = cols[11];
-                int cdCargo = Integer.parseInt(cols[13]);
-                int cdSit = Integer.parseInt(cols[48]);
-                if (!sgUe.equals(eleicao.getCodMunicipio()) || cdCargo != 13 || cdSit == -1) continue;
+
+                int codigoLinha    = Integer.parseInt(cols[11]);
+                int codigoEleicao  = Integer.parseInt(eleicao.getCodMunicipio());
+                int cdCargo        = Integer.parseInt(cols[13]);
+                int cdSit          = Integer.parseInt(cols[48]);
+
+                if (codigoLinha != codigoEleicao || cdCargo != 13 || cdSit == -1) {
+                    continue;
+                }
 
                 int nrCandidato = Integer.parseInt(cols[16]);
                 String nmCandidato = cols[17];
@@ -85,11 +91,12 @@ public class Leitor {
                 for (int i = 0; i < cols.length; i++) {
                     cols[i] = cols[i].replace("\"", "");
                 }
+           
+                int codigoLinha   = Integer.parseInt(cols[11]);
+                int codigoEleicao = Integer.parseInt(eleicao.getCodMunicipio());
+                int cdCargo       = Integer.parseInt(cols[17]);
 
-                // usa SG_UE (indice 11) ou CD_MUNICIPIO (13) — aqui vamos com SG_UE
-                String sgUe     = cols[11];           
-                int cdCargo     = Integer.parseInt(cols[17]);  // CD_CARGO = 17
-                if (!sgUe.equals(eleicao.getCodMunicipio()) || cdCargo != 13) {
+                if (codigoLinha != codigoEleicao || cdCargo != 13) {
                     continue;
                 }
 

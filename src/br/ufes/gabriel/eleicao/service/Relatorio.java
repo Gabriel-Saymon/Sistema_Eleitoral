@@ -1,10 +1,11 @@
-package br.ufes.Gabriel.eleicao.service;
+package br.ufes.gabriel.eleicao.service;
 
-import br.ufes.Gabriel.eleicao.model.Candidato;
-import br.ufes.Gabriel.eleicao.model.Partido;
 import java.text.NumberFormat;
 import java.time.Period;
 import java.util.*;
+
+import br.ufes.gabriel.eleicao.model.Candidato;
+import br.ufes.gabriel.eleicao.model.Partido;
 
 public class Relatorio {
    private Eleicao deputados;
@@ -48,74 +49,96 @@ public class Relatorio {
         nf.setGroupingUsed(true);
 
         int numeroVagas = deputados.getNumeroCandidatosEleitos();
-        List<Candidato> topN = new ArrayList<>();
+        List<Candidato> topN         = new ArrayList<>();
         List<Candidato> prejudicados = new ArrayList<>();
         List<Candidato> beneficiados = new ArrayList<>();
 
+        //Cria ranking completo e reordena:
         List<Candidato> ranking = new ArrayList<>(candidatosOrdenados);
+        ranking.sort(
+            Comparator.comparingInt(Candidato::getQtdVotos).reversed()
+                    // desempate: candidato mais velho primeiro
+                    .thenComparing(c ->
+                        Period.between(c.getDtNascimento(), deputados.getDataEleicao()).getYears(),
+                        Comparator.reverseOrder()
+                    )
+        );
 
-        int contador = 1;
-        for (Candidato c : candidatosOrdenados) {
-            // Monta top-N
-            if (contador <= numeroVagas) {
+        //Separa top-N, prejudicados e beneficiados
+        int idx = 1;
+        for (Candidato c : ranking) {
+            if (idx <= numeroVagas) {
                 topN.add(c);
-                // Prejudicados: dentro do top-N mas não eleitos
                 if (!c.isEleito()) {
                     prejudicados.add(c);
                 }
-            }
-            // Beneficiados: eleitos mas fora do top-N
-            else if (c.isEleito()) {
+            } else if (c.isEleito()) {
                 beneficiados.add(c);
             }
-            contador++;
+            idx++;
         }
 
-        // 2. Eleitos pelo proporcional
+        //Vereadores eleitos
+        System.out.println("Vereadores eleitos:");
         int count = 1;
-        System.out.println("Vereadores Eleitos:");
-        for (Candidato c : candidatosOrdenados) {
-            if (c.isEleito()) {
-                System.out.print(count + " - ");
-            if (c.getNrFederacao() != -1) System.out.print("*");
-            System.out.println(c.getNmUrnaCandidato() + " (" + c.getSgPartido() + ", " + nf.format(c.getQtdVotos()) + " votos)");
-                
-            count++;
-            }
-        }
-        System.out.println();
-
-        // 3. Top-N mais votados
-        System.out.println("Candidatos mais votados (em ordem decrescente de votação e respeitando número de vagas):");
-        contador = 1;
-        for (Candidato c : topN) {
-            System.out.print(contador + " - ");
-            if (c.getNrFederacao() != -1) System.out.print("*");
-            System.out.println(c.getNmUrnaCandidato() + " (" + c.getSgPartido() + ", " + nf.format(c.getQtdVotos()) + " votos)");
-                
-            contador++;
-        }
-        System.out.println();
-
-        // 4. Teriam sido eleitos se fosse majoritário
-        System.out.println("Teriam sido eleitos se a votação fosse majoritária, e não foram eleitos:\n(com sua posição no ranking de mais votados)");
-        for (Candidato c : prejudicados) {
-            System.out.print((topN.indexOf(c) + 1) + " - ");
-            if (c.getNrFederacao() != -1) System.out.print("*");
-            System.out.println(c.getNmUrnaCandidato() + " (" + c.getSgPartido() + ", " + nf.format(c.getQtdVotos()) + " votos)");
-
-        }
-
-        // 5. Eleitos que se beneficiaram do proporcional
-        System.out.println("\nEleitos que se beneficiaram do sistema proporcional:");
-        for (Candidato c : beneficiados) {
-            int pos = ranking.indexOf(c) + 1;     // posição no ranking completo
+        for (Candidato c : ranking) {
+            if (!c.isEleito()) continue;
             String prefix = c.getNrFederacao() != -1 ? "*" : "";
             System.out.printf(
-                "%2d - %s%s (%s votos)%n",
+                "%2d - %s%s (%s, %s votos)%n",
+                count++,
+                prefix,
+                c.getNmUrnaCandidato(),
+                c.getSgPartido(),
+                nf.format(c.getQtdVotos())
+            );
+        }
+        System.out.println();
+
+        //Top-N mais votados
+        System.out.println("Candidatos mais votados (em ordem decrescente de votação e respeitando número de vagas):");
+        int ord = 1;
+        for (Candidato c : topN) {
+            String prefix = c.getNrFederacao() != -1 ? "*" : "";
+            System.out.printf(
+                "%2d - %s%s (%s, %s votos)%n",
+                ord++,
+                prefix,
+                c.getNmUrnaCandidato(),
+                c.getSgPartido(),
+                nf.format(c.getQtdVotos())
+            );
+        }
+        System.out.println();
+
+        //Prejudicados
+        System.out.println("Teriam sido eleitos se a votação fosse majoritária, e não foram eleitos:");
+        System.out.println("(com sua posição no ranking de mais votados)");
+        for (Candidato c : prejudicados) {
+            int pos = ranking.indexOf(c) + 1;
+            String prefix = c.getNrFederacao() != -1 ? "*" : "";
+            System.out.printf(
+                "%2d - %s%s (%s, %s votos)%n",
                 pos,
                 prefix,
                 c.getNmUrnaCandidato(),
+                c.getSgPartido(),
+                nf.format(c.getQtdVotos())
+            );
+        }
+
+        //Beneficiados
+        System.out.println("\nEleitos, que se beneficiaram do sistema proporcional:");
+        System.out.println("(com sua posição no ranking de mais votados)");
+        for (Candidato c : beneficiados) {
+            int pos = ranking.indexOf(c) + 1;
+            String prefix = c.getNrFederacao() != -1 ? "*" : "";
+            System.out.printf(
+                "%2d - %s%s (%s, %s votos)%n",
+                pos,
+                prefix,
+                c.getNmUrnaCandidato(),
+                c.getSgPartido(),
                 nf.format(c.getQtdVotos())
             );
         }
@@ -125,7 +148,7 @@ public class Relatorio {
     /**
     * Imprime a votação dos partidos e quantos candidatos cada um teve eleitos.
     */
-    private void printVotacaoPorPartido() {
+    public void printVotacaoPorPartido() {
         NumberFormat nf = NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"));
         nf.setGroupingUsed(true);
 
@@ -137,84 +160,131 @@ public class Relatorio {
             int legenda  = p.getVotosLegenda();
             int total    = nominais + legenda;
 
+            // conta eleitos
             int eleitos = 0;
             for (Candidato c : p.getCandidatos()) {
-                if (c.isEleito()) {
-                    eleitos++;
-                }
+                if (c.isEleito()) eleitos++;
             }
 
-            String totalLabel;
-            if (total == 1) {
-                totalLabel = nf.format(total) + " voto";
+            // escolhe termo para total de votos
+            String termoTotal;
+            if (total <= 1) {
+                termoTotal = "voto";
             } else {
-                totalLabel = nf.format(total) + " votos";
+                termoTotal = "votos";
             }
 
-            String nomLabel;
-            if (nominais == 1) {
-                nomLabel = nf.format(nominais) + " nominal";
+            // escolhe termo para nominais
+            String termoNominais;
+            if (nominais <= 1) {
+                termoNominais = "nominal";
             } else {
-                nomLabel = nf.format(nominais) + " nominais";
+                termoNominais = "nominais";
             }
 
-            String legLabel = nf.format(legenda) + " de legenda";
-
-            String eleitosLabel;
-            if (eleitos == 1) {
-                eleitosLabel = eleitos + " candidato eleito";
+            // escolhe termo para legenda (mantém 'de legenda' invariável, só pluraliza 'voto')
+            String termoLegenda;
+            if (legenda <= 1) {
+                termoLegenda = "de legenda";
             } else {
-                eleitosLabel = eleitos + " candidatos eleitos";
+                termoLegenda = "de legenda";
             }
 
+            // escolhe termo para candidatos eleitos
+            String textoEleitos;
+            if (eleitos <= 1) {
+                textoEleitos = eleitos + " candidato eleito";
+            } else {
+                textoEleitos = eleitos + " candidatos eleitos";
+            }
+
+            // imprime tudo com um único printf
             System.out.printf(
-                "%2d - %s - %d, %s (%s e %s), %s%n",contador,p.getSigla(),p.getNumero(),totalLabel,nomLabel,legLabel,eleitosLabel
+                "%2d - %s - %d, %s %s (%s %s e %s %s), %s%n",
+                contador,
+                p.getSigla(),
+                p.getNumero(),
+                nf.format(total), 
+                termoTotal,
+                nf.format(nominais),termoNominais,
+                nf.format(legenda), termoLegenda,
+                textoEleitos
             );
             contador++;
         }
+        System.out.println();
     }
 
     /**
      * Imprime o primeiro e ultimo colocados de cada partido.
      */
     public void printPrimeiroUltimoPorPartido() {
-        //Ordena cada lista interna de candidatos no partido com comparador explicito
+        // 1) Ordena cada lista interna de candidatos no partido
         for (Partido p : partidosOrdenados) {
             p.getCandidatos().sort(
                 Comparator.comparingInt(Candidato::getQtdVotos).reversed()
+                        .thenComparing(c ->
+                            Period.between(c.getDtNascimento(), deputados.getDataEleicao()).getYears(),
+                            Comparator.reverseOrder()
+                        )
             );
         }
 
-        //Coleta o “primeiro” de cada partido (se houver candidato)
+        // 2) Coleta o “primeiro” de cada partido que tenha ao menos 2 candidatos
         List<Candidato> primeiros = new ArrayList<>();
         for (Partido p : partidosOrdenados) {
             List<Candidato> lista = p.getCandidatos();
-            if (!lista.isEmpty()) {
+            if (lista.size() >= 2) {
                 primeiros.add(lista.get(0));
             }
         }
 
-        //Ordena essa lista de primeiros pelo numero de votos (decrescente)
-        primeiros.sort( Comparator.comparingInt(Candidato::getQtdVotos).reversed());
+        // 3) Ordena esses primeiros pelo número de votos, desempate por partido e idade
+        primeiros.sort(
+            Comparator.comparingInt(Candidato::getQtdVotos).reversed()
+                    .thenComparingInt(Candidato::getNrPartido)
+                    .thenComparing(c ->
+                        Period.between(c.getDtNascimento(), deputados.getDataEleicao()).getYears(),
+                        Comparator.reverseOrder()
+                    )
+        );
 
         NumberFormat nf = NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"));
         nf.setGroupingUsed(true);
 
         System.out.println("\nPrimeiro e último colocados de cada partido:");
         int contador = 1;
-        for (Candidato c : primeiros) {
-            //Imprime o primeiro colocado do partido
-            System.out.printf("%2d - %s - %d, %s (%d, %s votos) / ",contador++, c.getSgPartido(), c.getNrPartido(), c.getNmUrnaCandidato(), c.getNrCandidato(), nf.format(c.getQtdVotos()));
-
-            //Busca o ultimo do partido pelo numero do partido
-            Partido partido = deputados.getPartidoPorNumero(c.getNrPartido());
+        for (Candidato primeiro : primeiros) {
+            Partido partido = deputados.getPartidoPorNumero(primeiro.getNrPartido());
             List<Candidato> lista = partido.getCandidatos();
             Candidato ultimo = lista.get(lista.size() - 1);
 
-            //Imprime o ultimo colocado
-            System.out.printf("%s (%d, %s votos)%n", ultimo.getNmUrnaCandidato(), ultimo.getNrCandidato(), nf.format(ultimo.getQtdVotos()));
+            // singular/plural para o primeiro
+            int vp = primeiro.getQtdVotos();
+            String lblP = (vp <= 1 ? "voto" : "votos");
+
+            // singular/plural para o último
+            int vu = ultimo.getQtdVotos();
+            String lblU = (vu <= 1 ? "voto" : "votos");
+
+            // impressão única
+            System.out.printf(
+                "%2d - %s - %d, %s (%d, %s %s) / %s (%d, %s %s)%n",
+                contador++,
+                primeiro.getSgPartido(),
+                primeiro.getNrPartido(),
+                primeiro.getNmUrnaCandidato(),
+                primeiro.getNrCandidato(),
+                nf.format(vp),
+                lblP,
+                ultimo.getNmUrnaCandidato(),
+                ultimo.getNrCandidato(),
+                nf.format(vu),
+                lblU
+            );
         }
     }
+
 
     /**
      * Imprime distribuicao de eleitos por faixa etaria.

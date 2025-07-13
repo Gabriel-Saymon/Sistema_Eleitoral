@@ -1,11 +1,11 @@
-package br.ufes.Gabriel.eleicao;
-
-import br.ufes.Gabriel.eleicao.service.Eleicao;
-import br.ufes.Gabriel.eleicao.service.Relatorio;
-import br.ufes.Gabriel.eleicao.util.Leitor;
+package br.ufes.gabriel.eleicao;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import br.ufes.gabriel.eleicao.service.Eleicao;
+import br.ufes.gabriel.eleicao.service.Relatorio;
+import br.ufes.gabriel.eleicao.util.Leitor;
 
 public class App {
     public static void main(String[] args) throws Exception {

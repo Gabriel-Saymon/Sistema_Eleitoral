@@ -1,4 +1,4 @@
-package br.ufes.Gabriel.eleicao.model;
+package br.ufes.gabriel.eleicao.model;
 
 import java.util.ArrayList;
 import java.util.List;
