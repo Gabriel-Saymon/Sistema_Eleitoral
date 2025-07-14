@@ -17,13 +17,15 @@ public class Candidato {
 
     private int qtdVotos;             // Votos nominais
 
+    private Partido partido;
+
     // Formata datas no padrao dia/mes/ano (ex: 06/10/2024)
     //private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Candidato(String sgUe, int cdCargo, int nrCandidato, String nmCandidato, String nmUrnaCandidato, int nrPartido, String sgPartido, int nrFederacao,
                      LocalDate dtNascimento,
                      int cdGenero,
-                     int cdSitTotTurno) {
+                     int cdSitTotTurno,Partido partido) {
         this.sgUe = sgUe;
         this.cdCargo = cdCargo;
         this.nrCandidato = nrCandidato;
@@ -35,6 +37,15 @@ public class Candidato {
         this.dtNascimento = dtNascimento;
         this.cdGenero = cdGenero;
         this.cdSitTotTurno = cdSitTotTurno;
+        this.partido = partido;
+    }
+
+    public Partido getPartido() {
+        return this.partido;
+    }
+
+    public void setPartido(Partido partido) {
+        this.partido = partido;
     }
    
     public String getNmCandidato() {

@@ -1,14 +1,78 @@
-@startuml Sistema_Eleitoral
+@startuml BrazilianElectionsSystem
 
 title Diagrama de Classes - Sistema de Apuração Eleitoral de Vereadores
 
-package "br.ufes.Gabriel.eleicao" {
+' Pacote principal
+package "br.ufes.gabriel.eleicao" {
   class App {
     + main(args: String[]): void
   }
+
+  class Eleicao {
+    - codMunicipio: String
+    - dataEleicao: LocalDate
+    - vagas: int
+    - candidatos: Map<Integer, Candidato>
+    - partidos: List<Partido>
+    + Eleicao(codMunicipio: String, dataEleicao: LocalDate)
+    + adicionaCandidato(Candidato): void
+    + adicionaPartido(Partido): void
+    + getNumeroCandidatosEleitos(): int
+    + getPartidoPorNumero(nr: int): Partido
+    + getCandidatos(): Collection<Candidato>
+    + getPartidos(): List<Partido>
+  }
+
+  class Relatorio {
+    - eleicao: Eleicao
+    - candidatosOrdenados: List<Candidato>
+    - partidosOrdenados: List<Partido>
+    + Relatorio(eleicao: Eleicao)
+    + gerarRelatorios(): void
+    - printNumeroVagas(): void
+    - printCandidatosMaisVotados(): void
+    - printVotacaoPorPartido(): void
+    - printPrimeiroUltimoPorPartido(): void
+    - printDistribuicaoFaixaEtaria(): void
+    - printDistribuicaoGenero(): void
+    - printTotalVotos(): void
+  }
 }
 
-package "br.ufes.Gabriel.eleicao.util" {
+' Pacote de modelo
+package "br.ufes.gabriel.eleicao.model" {
+  class Partido {
+    - nrPartido: int
+    - sgPartido: String
+    - votosLegenda: int
+    - candidatos: List<Candidato>
+    + Partido(nr: int, sigla: String)
+    + addCandidato(Candidato): void
+    + addVotosLegenda(int): void
+    + getVotosNominais(): int
+    + getTotalVotos(): int
+    + getCandidatos(): List<Candidato>
+  }
+
+  class Candidato {
+    - nrCandidato: int
+    - nmUrna: String
+    - dtNascimento: LocalDate
+    - sgPartido: String
+    - nrFederacao: int
+    - qtdVotos: int
+    - partido: Partido
+    + Candidato(..., partido: Partido)
+    + addVotos(int): void
+    + isEleito(): boolean
+    + getQtdVotos(): int
+    + getDtNascimento(): LocalDate
+    + getNrFederacao(): int
+  }
+}
+
+' Pacote de util
+package "br.ufes.gabriel.eleicao.util" {
   class Leitor {
     - brCandidatos: BufferedReader
     - brVotos: BufferedReader
@@ -18,66 +82,20 @@ package "br.ufes.Gabriel.eleicao.util" {
   }
 }
 
-package "br.ufes.Gabriel.eleicao.model" {
-  class Candidato {
-    - nmUrnaCandidato: String
-    - nmCandidato: String
-    - cargo: int
-    - nrCandidato: int
-    - nrPartido: int
-    - sgPartido: String
-    - nrFederacao: int
-    - dtNascimento: LocalDate
-    - cdGenero: int
-    - cdSitTotTurno: int
-    - qtdVotos: int
-    + isEleito(): boolean
-    + addVotos(qt: int): void
-    + getQtdVotos(): int
-  }
+' Relacionamentos
+App --> Eleicao : cria >
+App --> Leitor : usa >
+App --> Relatorio : usa >
 
-  class Partido {
-    - nrPartido: int
-    - sgPartido: String
-    - votosLegenda: int
-    - candidatos: List<Candidato>
-    + addCandidato(c: Candidato): void
-    + addVotosLegenda(qt: int): void
-    + getVotosNominais(): int
-    + getTotalVotos(): int
-  }
-}
+Leitor --> Eleicao : popula candidatos e partidos >
 
-package "br.ufes.Gabriel.eleicao.service" {
-  class Eleicao {
-    - codMunicipio: String
-    - dataEleicao: LocalDate
-    - qtdVagas: int
-    - candidatos: Map<Integer, Candidato>
-    - partidos: List<Partido>
-    + getNumeroCandidatosEleitos(): int
-    + getPartidoPorNumero(nr: int): Partido
-    + getCandidatos(): Map<Integer, Candidato>
-    + getPartidos(): List<Partido>
-  }
+Eleicao "1" *-- "0..*" Candidato : contém >
+Eleicao "1" *-- "0..*" Partido   : contém >
 
-  class Relatorio {
-    - deputados: Eleicao
-    - candidatosOrdenados: List<Candidato>
-    - partidosOrdenados: List<Partido>
-    + Relatorio(deputados: Eleicao)
-    + gerarRelatorios(): void
-  }
-}
+Partido "1" o-- "0..*" Candidato : agrega >
+Candidato --> Partido : pertence a >
 
-App --> Leitor
-App --> Eleicao
-App --> Relatorio
-Eleicao "1" *-- "0..*" Candidato : contains >
-Eleicao "1" *-- "0..*" Partido   : contains >
-Leitor --> Eleicao
-Relatorio --> Eleicao
-Relatorio --> Candidato
-Relatorio --> Partido
-Candidato --> Partido : participanteDe >
+Relatorio --> Eleicao   : analisa >
+Relatorio --> Candidato : ordena/relata >
+Relatorio --> Partido   : ordena/relata >
 @enduml

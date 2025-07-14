@@ -71,7 +71,7 @@ public class Leitor {
                 LocalDate dtNasc = LocalDate.parse(cols[36], formatter);
                 int cdGenero = Integer.parseInt(cols[38]);
 
-                Candidato cand = new Candidato(sgUe, cdCargo, nrCandidato, nmCandidato, nmUrna, nrPartido, sgPartido, nrFederacao, dtNasc, cdGenero, cdSit);
+                Candidato cand = new Candidato(sgUe, cdCargo, nrCandidato, nmCandidato, nmUrna, nrPartido, sgPartido, nrFederacao, dtNasc, cdGenero, cdSit,partido);
 
                 eleicao.adicionaCandidato(cand);
                 partido.addCandidato(cand);

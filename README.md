@@ -11,7 +11,7 @@ Este projeto implementa o processamento e geração de relatórios de resultados
 │   └── vereadores.jar
 ├── bin/
 ├── src/
-│   └─ br/ufes/Gabriel/eleicao/
+│   └─ br/ufes/gabriel/eleicao/
 │       ├─ model/
 │       │   ├ Candidato.java      # Classe que representa um candidato
 │       │   ├ Partido.java        # Classe que representa um partido
